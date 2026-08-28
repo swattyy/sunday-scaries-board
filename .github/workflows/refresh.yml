@@ -1,0 +1,55 @@
+name: refresh board
+
+on:
+  schedule:
+    # 07:00 and 19:00 UTC = 1am and 1pm Mountain
+    - cron: '0 7,19 * * *'
+  workflow_dispatch:        # trigger on demand from the Actions tab
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-board
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Build board
+        run: python build.py
+
+      - name: Verify output is sane
+        run: |
+          python - <<'PY'
+          import json
+          d = json.load(open('board_data.json'))
+          n, f = len(d['players']), len(d['players'][0])
+          assert n >= 200, 'only %d players' % n
+          assert f == 15, 'schema is %d fields, expected 15' % f
+          assert d.get('notes'), 'research notes missing'
+          top = sorted(d['players'], key=lambda r: -(r[5] or -999))[:1][0]
+          assert top[5] > 100, 'VOR looks wrong at the top: %s' % top
+          print('ok: %d players, %d fields, %d notes, top %s vor %+d'
+                % (n, f, len(d['notes']), top[1], top[5]))
+          PY
+
+      - name: Commit if the data actually changed
+        run: |
+          git config user.name  'draft-radar-bot'
+          git config user.email 'actions@github.com'
+          git add board_data.json
+          if git diff --cached --quiet; then
+            echo 'board unchanged - nothing to publish'
+          else
+            git commit -m "board refresh $(date -u +%Y-%m-%d)"
+            git push
+            echo 'published'
+          fi

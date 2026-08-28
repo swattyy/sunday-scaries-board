@@ -1,0 +1,20 @@
+{
+  "_comment": "Hand-researched draft-day notes, keyed by ESPN player id. tone: warn | good. Surfaced in the extension's explain card and as a row badge.",
+  "3139477": {"tone":"warn","short":"ACL+LCL","note":"Tore ACL and LCL Dec 2025. Week 1 is 2 days shy of his 9-month recovery mark and Andy Reid will not commit him. Projection assumes a full healthy season."},
+  "4427366": {"tone":"warn","short":"committee","note":"Mid-August groin injury plus the coach wants a three-back committee. Volume case is weaker than the projection."},
+  "4870808": {"tone":"warn","short":"high ankle","note":"High ankle sprain, out for preseason, team only hoping for Week 1. High ankles linger."},
+  "3040151": {"tone":"warn","short":"PUP","note":"On PUP with a torn Achilles - misses at least 4 games. Only draftable as an IR-slot stash AFTER you have a real TE."},
+  "5083076": {"tone":"warn","short":"QB change","note":"Falling after the Browns named Deshaun Watson starter."},
+  "3045147": {"tone":"warn","short":"3rd string","note":"Possibly third on the depth chart behind Love and Allgeier; has not resumed 11-on-11. Do not draft."},
+  "3117251": {"tone":"warn","short":"questionable","note":"Questionable; missed over a week with tightness the team is managing. Long injury history."},
+  "4685278": {"tone":"warn","short":"groin","note":"Missed preseason with a groin injury. Risky at ADP - Rome Odunze benefits."},
+  "3043078": {"tone":"warn","short":"age 32","note":"Age-32 season. No RB since 2000 has averaged 16 ppg at 32+, only three managed 14. Volume is safe, efficiency is the risk."},
+  "4567048": {"tone":"good","short":"bell cow","note":"Zach Charbonnet tore his ACL in January - Walker owns the entire KC backfield. Market has not fully repriced this. Best value on our board."},
+  "4361579": {"tone":"good","short":"bell cow","note":"Re-signed by Dallas, projected for genuine workhorse volume (~1,280 rush yds, 15 total TD)."},
+  "4890973": {"tone":"good","short":"300+ touches","note":"Kubiak wide-zone scheme fits him; staff targeting 300-335 touches plus a bigger passing role. Rookie-year letdown is your discount."},
+  "4362628": {"tone":"good","short":"cleared","note":"Aug 25 knee scare was a minor hyperextension; said he could play the next day. Held out purely as precaution. Draft normally."},
+  "4689114": {"tone":"good","short":"top plateau QB","note":"8 top-10 weeks as a rookie in ~12 games. New staff, healthy Nabers, real rushing upside. Best of the QB plateau. Caveat: concussion history from how he runs."},
+  "4426338": {"tone":"good","short":"QB11 ppg","note":"Finished QB11 in points per game even in a down year, age 26. Worth a top-4-round pick in superflex."},
+  "4242335": {"tone":"warn","short":"QB-dependent","note":"Was RB2 per game with Daniel Jones healthy, RB22 without him. Jones returns from an Achilles tear. Huge range of outcomes."},
+  "4429160": {"tone":"warn","short":"new OC","note":"New OC Bobby Slowik plans to run more, but 43% of his PPR value came through the air and Malik Willis rarely checks down. Receiving floor is the risk."}
+}
