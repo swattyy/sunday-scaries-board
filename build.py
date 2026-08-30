@@ -47,6 +47,18 @@ BOARDS = {
         # ESPN ADP is measured from real rooms just like this one - trust it more
         'ecr_weight': 1/3,
     },
+    # the Legacy League if a vote ever kills the OP slot: the same half-PPR
+    # 4-pt-pass-TD scoring as board_data.json, but 1-QB baselines and the
+    # 1-QB half-PPR expert consensus. Skill baselines shed the ~2 starters
+    # the OP slot used to absorb; the 3-man bench keeps them shallow.
+    '1qb_hppr': {
+        'file': 'board_1qb_hppr.json',
+        'fp_slug': 'half-point-ppr',
+        'half_ppr': True,
+        'base': {'QB': 14, 'RB': 30, 'WR': 32, 'TE': 13, 'K': 12, 'DST': 12},
+        # ECR matches the scoring exactly, ADP matches the room type - split them
+        'ecr_weight': 1/2,
+    },
 }
 
 
@@ -223,13 +235,16 @@ def build():
         out = assemble(espn, fantasypros(cfg['fp_slug']), cfg)
         publish(out, cfg, notes)
 
-        # local run only: bake the 1-QB offline fallback into the extension.
+        # local run only: bake the 1-QB offline fallbacks into the extension.
         # (The superflex fallback, board_data.js, is baked by data/make_ext.py.)
+        bakes = {'1qb': ('board_1qb.js', 'SS_BOARD_1QB'),
+                 '1qb_hppr': ('board_1qb_hppr.js', 'SS_BOARD_1QB_HPPR')}
         ext = os.path.join(os.path.dirname(HERE), 'extension')
-        if mode == '1qb' and os.path.isdir(ext):
-            js = 'window.SS_BOARD_1QB=' + json.dumps(out, separators=(',', ':')) + ';\n'
-            open(os.path.join(ext, 'board_1qb.js'), 'w', encoding='utf8').write(js)
-            print('extension/board_1qb.js: %d players (baked fallback)' % len(out))
+        if mode in bakes and os.path.isdir(ext):
+            fn, var = bakes[mode]
+            js = 'window.' + var + '=' + json.dumps(out, separators=(',', ':')) + ';\n'
+            open(os.path.join(ext, fn), 'w', encoding='utf8').write(js)
+            print('extension/%s: %d players (baked fallback)' % (fn, len(out)))
 
 
 if __name__ == '__main__':
