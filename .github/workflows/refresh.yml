@@ -30,22 +30,30 @@ jobs:
         run: |
           python - <<'PY'
           import json
-          d = json.load(open('board_data.json'))
-          n, f = len(d['players']), len(d['players'][0])
-          assert n >= 200, 'only %d players' % n
-          assert f == 15, 'schema is %d fields, expected 15' % f
-          assert d.get('notes'), 'research notes missing'
-          top = sorted(d['players'], key=lambda r: -(r[5] or -999))[:1][0]
-          assert top[5] > 100, 'VOR looks wrong at the top: %s' % top
-          print('ok: %d players, %d fields, %d notes, top %s vor %+d'
-                % (n, f, len(d['notes']), top[1], top[5]))
+          boards = {}
+          for f in ('board_data.json', 'board_1qb.json'):
+              d = json.load(open(f))
+              boards[f] = d
+              n, w = len(d['players']), len(d['players'][0])
+              assert n >= 200, '%s: only %d players' % (f, n)
+              assert w == 15, '%s: schema is %d fields, expected 15' % (f, w)
+              assert d.get('notes'), '%s: research notes missing' % f
+              top = sorted(d['players'], key=lambda r: -(r[5] or -999))[0]
+              assert top[5] > 100, '%s: VOR looks wrong at the top: %s' % (f, top)
+              print('ok %s: %d players, %d notes, top %s vor %+d'
+                    % (f, n, len(d['notes']), top[1], top[5]))
+          # QB replacement is QB24 on the superflex board but QB14 on the 1-QB
+          # board, so superflex QB VOR must be strictly higher - catches a config swap
+          qbvor = lambda d: max((r[5] or -999) for r in d['players'] if r[3] == 'QB')
+          assert qbvor(boards['board_data.json']) > qbvor(boards['board_1qb.json']), \
+              'QB VOR is not higher on the superflex board - boards look swapped'
           PY
 
       - name: Commit if the data actually changed
         run: |
           git config user.name  'draft-radar-bot'
           git config user.email 'actions@github.com'
-          git add board_data.json
+          git add board_data.json board_1qb.json
           if git diff --cached --quiet; then
             echo 'board unchanged - nothing to publish'
           else
