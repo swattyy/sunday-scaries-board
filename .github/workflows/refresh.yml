@@ -26,6 +26,9 @@ jobs:
       - name: Build board
         run: python build.py
 
+      - name: Build weekly consensus (no-op in offseason)
+        run: python week.py
+
       - name: Verify output is sane
         run: |
           python - <<'PY'
@@ -54,6 +57,7 @@ jobs:
           git config user.name  'draft-radar-bot'
           git config user.email 'actions@github.com'
           git add board_data.json board_1qb.json board_1qb_hppr.json
+          if [ -f week.json ]; then git add week.json; fi
           if git diff --cached --quiet; then
             echo 'board unchanged - nothing to publish'
           else
