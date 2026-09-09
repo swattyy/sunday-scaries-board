@@ -3,7 +3,7 @@
 Effective September 9, 2026.
 
 Draft Radar helps users review ESPN fantasy football drafts, lineups, matchups
-and available players. This policy describes version 0.10.0.
+and available players. This policy describes version 0.11.0.
 
 ## Data used in your browser
 
@@ -20,8 +20,9 @@ not submit lineups, trades, purchases or waiver claims on your behalf.
 ## Public data providers
 
 The extension downloads public ranking data from GitHub's raw.githubusercontent.com,
-player statuses and fantasy trends from api.sleeper.app, and NFL game schedules
-from ESPN. Player images load from ESPN and Sleeper image services. These services
+player statuses and fantasy trends from api.sleeper.app, and NFL game schedules, player news headlines and regular-season game logs
+from ESPN. Opening a player card requests that public player ID from ESPN;
+player-detail responses are cached in page memory for up to 15 minutes. Player images load from ESPN and Sleeper image services. These services
 receive normal network metadata, including IP address and the resource requested,
 under their own privacy policies. Private league snapshots are not sent to these
 public ranking or image providers.
@@ -44,7 +45,7 @@ extension package; the remote rankings feed supplies data, not executable code.
 
 ## Contact and changes
 
-For questions or deletion assistance, open an issue at
+For questions or deletion assistance, email swatyy.dev@pm.me or open an issue at
 https://github.com/swattyy/sunday-scaries-board/issues . Do not include passwords,
 authentication cookies or private league exports in a public issue. This policy
 will be updated when the extension's data practices materially change.
