@@ -14,6 +14,7 @@ Gracefully does nothing (keeps the old file) when weekly rankings are not
 published yet - e.g. during the offseason the pages hold draft content.
 """
 import json, os, sys, time
+from datetime import datetime, timezone
 from build import get, norm, espn_players, POS
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -45,12 +46,23 @@ def main():
             by_name[norm(p['fullName'])] = (p.get('id'), POS[p.get('defaultPositionId')])
 
     rows, week = [], 0
+    skipped = []
     for tag, slug in PAGES.items():
-        players, wk = weekly(slug)
+        try:
+            players, wk = weekly(slug)
+        except Exception as exc:
+            print('weekly page unavailable: %s: %s' % (slug, exc))
+            skipped.append(slug)
+            continue
         if players is None:
             print('week.json: %s page has no weekly data (offseason?) - skipping' % slug)
             continue
-        week = max(week, wk or 0)
+        if not wk or not 1 <= wk <= 18:
+            skipped.append(slug)
+            continue
+        if week and wk != week:
+            raise RuntimeError('Weekly pages disagree (%s vs %s); refusing mixed-week feed' % (week, wk))
+        week = wk
         for r in players:
             k = norm(r.get('player_name'))
             hit = by_name.get(k)
@@ -68,15 +80,11 @@ def main():
         return
 
     dest = os.path.join(HERE, 'week.json')
-    payload = {'week': week, 'updated': time.strftime('%Y-%m-%dT%H:%M:%S'), 'players': rows}
-    # same idempotency trick as the boards: identical data keeps the old timestamp
-    if os.path.exists(dest):
-        try:
-            prev = json.load(open(dest, encoding='utf8'))
-            if prev.get('players') == rows and prev.get('week') == week:
-                payload['updated'] = prev.get('updated', payload['updated'])
-        except Exception:
-            pass
+    rows = list({r[0]: r for r in rows}.values())
+    payload = {'season': 2026, 'week': week, 'updated': datetime.now(timezone.utc).isoformat(),
+               'scoring': 'half-PPR', 'source': 'FantasyPros weekly ranks',
+               'positions': sorted({r[1] for r in rows}), 'skipped': skipped, 'players': rows}
+    # Timestamp records observation freshness, even when rankings are unchanged.
     json.dump(payload, open(dest, 'w'), separators=(',', ':'))
     print('week.json: week %d, %d ranked players' % (week, len(rows)))
 
