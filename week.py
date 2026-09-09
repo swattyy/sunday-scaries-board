@@ -15,7 +15,7 @@ published yet - e.g. during the offseason the pages hold draft content.
 """
 import json, os, sys, time
 from datetime import datetime, timezone
-from build import get, norm, espn_players, POS
+from build import get, norm, espn_players, POS, TEAM
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
@@ -39,11 +39,13 @@ def weekly(slug):
 
 
 def main():
-    by_name = {}
+    by_name, by_defense = {}, {}
     for e in espn_players(limit=600):
         p = e['player']
         if POS.get(p.get('defaultPositionId')):
             by_name[norm(p['fullName'])] = (p.get('id'), POS[p.get('defaultPositionId')])
+            if POS[p.get('defaultPositionId')] == 'DST':
+                by_defense[TEAM.get(p.get('proTeamId'))] = (p.get('id'), 'DST')
 
     rows, week = [], 0
     skipped = []
@@ -66,6 +68,10 @@ def main():
         for r in players:
             k = norm(r.get('player_name'))
             hit = by_name.get(k)
+            if r.get('player_position_id') == 'DST':
+                team = r.get('player_team_id')
+                team = {'JAC': 'JAX', 'WAS': 'WSH', 'LA': 'LAR'}.get(team, team)
+                hit = by_defense.get(team)
             if not hit:
                 continue
             eid, pos = hit
