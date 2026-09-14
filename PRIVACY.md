@@ -1,9 +1,9 @@
 # Draft Radar Privacy Policy
 
-Effective September 9, 2026.
+Effective September 13, 2026.
 
 Draft Radar helps users review ESPN fantasy football drafts, lineups, matchups
-and available players. This policy describes version 0.11.0.
+and available players. This policy describes version 0.12.0.
 
 ## Data used in your browser
 
@@ -27,6 +27,12 @@ receive normal network metadata, including IP address and the resource requested
 under their own privacy policies. Private league snapshots are not sent to these
 public ranking or image providers.
 
+If you optionally connect Sleeper during setup, the extension sends the username
+you enter to Sleeper's public API to retrieve that user's public NFL leagues. The
+selected Sleeper username, user ID, league ID, league name and season are stored
+locally in the extension. Draft Radar does not request a Sleeper password or API
+token.
+
 ## Local storage and retention
 
 Display preferences, selected fantasy team and public-data caches are stored in
@@ -35,6 +41,9 @@ held in runtime memory. Closing the page ends that runtime session. Clearing ESP
 site data removes the local preferences and caches; uninstalling the extension
 stops its activity but may not clear existing ESPN-origin storage. This storage
 is not a secure vault and may be accessible to other code running on that origin.
+
+First-run completion and optional Sleeper identifiers are stored in extension
+local storage. Uninstalling Draft Radar removes that extension-owned storage.
 
 ## Use and sharing
 
